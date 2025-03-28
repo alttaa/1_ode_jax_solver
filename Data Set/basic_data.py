@@ -13,12 +13,19 @@ def data(height,a,b):
         data.append(gen_data(a,b))
     return data
 
-trial = data(10,-5, 5)
-a = trial[0]
-b =  trial[1]
-c = trial[2]
-df = pd.DataFrame(trial, columns =['a' , 'b', 'c'] )
-print(np.shape(b))
+trial = np.array(data(10,-5, 5))
+a,b,c = trial[:,0], trial[:,1], trial[:,2]
+trial_2 = np.array(data(10,-5, 5))
+print(np.shape(trial), 'WTF')
+trial  = np.append(trial, trial_2, axis =1)
+print
+print(a)
+print(np.shape(a), "A")
+print(b)
+print(np.shape(b), "B")
+print(np.shape(trial),"dfjskl;jfsadk")
+
+#df = pd.DataFrame(trial, columns =['a' , 'b', 'c'])
 
 # #testing 
 # #trial = np.array((data(10,-5,5))) # pracing with 10 trials, a = -1, b = 1) 
