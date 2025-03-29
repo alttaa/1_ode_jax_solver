@@ -19,20 +19,24 @@ def ode_dataset(upper,lower,n, M, num_y0, y0_span, tspan,steps):
     for i in range(M):
         trial_p = np.array(data(M, upper, lower))
         a_list, b_list, c_list = trial_p[:,0], trial_p[:,1], trial_p[:,2]
-        trial_r = data(M, upper, lower)
+        trial_r = np.array(data(M, upper, lower))
         e_list, f_list, g_list = trial_r[:,0], trial_r[:,1], trial_r[:,2]
-        trial_p.append(trial_r)
-        trial_p[i].append(np.random.randint(0,n))
+        trial_p = np.append(trial_p, trial_r, axis =1)
+        trial_p = np.append(trial_p, np.random.randint(0,n), axis =1)
         P_lambda, P_name = random_func(a_list, b_list, c_list)
         R_lambda, R_name = random_func(e_list, f_list, g_list) 
-        trial_p[i].append(P_name) #in df, P(t) class
-        trial_p[i].append(R_name)#in df, R(t))  class
-        def sys(t,y,trail):
+        trial_p =np.append(trial_p,P_name,R_name, axis =1)
+     #    trial_p[i].append(P_name) #in df, P(t) class
+     #    trial_p[i].append(R_name)#in df, R(t))  class
+
+        def sys(t,y,trail_p, trial_r):
              return -P_lambda(t,a_list,b_list,c_list) - R_lambda(t,e_list,f_list, g_list)
+        
         for j in range(num_y0):
              IC = [np.random.randint(y0_span[0], y0_span[1])]  
              sol = solve_ivp(sys, [t0, tf], IC, t_eval=np.arange(t0, tf, steps))
-             trial_p[i].append(sol.y)
+             sol.t, sol.y = sol
+          #    trial_p = np.append(trial_p, sol.y)
      
         return trial
 
