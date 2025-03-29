@@ -33,11 +33,20 @@ def ode_dataset(upper,lower,n, M, num_y0, y0_span, tspan,steps):
              return -P_lambda(t,a_list,b_list,c_list) - R_lambda(t,e_list,f_list, g_list)
         
         for j in range(num_y0):
-             IC = [np.random.randint(y0_span[0], y0_span[1])]  
-             sol = solve_ivp(sys, [t0, tf], IC, t_eval=np.arange(t0, tf, steps))
-             sol.t, sol.y = sol
-          #    trial_p = np.append(trial_p, sol.y)
-     
-        return trial
+            a = a_list[i]
+            b = b_list[i]
+            c = c_list[i]
+            e = e_list[i]
+            f = f_list[i]               
+            g = g_list[i]
+            P_func = lambda t, y: P_lambda(t, a, b, c)
+            R_func = lambda t, y: R_lambda(t, e, f, g)
+            def sys(t,y):
+               return -P_lambda(t,y) - R_lambda(t,y)
+             
+            IC = [np.random.randint(y0_span[0], y0_span[1])]  
+            sol = solve_ivp(sys, [t0, tf], IC, t_eval=np.arange(t0, tf, steps))
+            trial_p = np.append(trial_p, sol.y, axis = 1)
+    return trial_p
 
 print(ode_dataset(-5, 5, 4, 10,3,[0,10],[0,10],100))
